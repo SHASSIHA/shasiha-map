@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شاصيها | أقرب مركز فحص</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f5f7fa;
+  margin: 0;
+}
+
+.header {
+  background: #000;
+  color: #fff;
+  padding: 20px;
+  font-size: 22px;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+button {
+  padding: 15px 25px;
+  font-size: 18px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.result {
+  margin-top: 30px;
+  font-size: 20px;
+}
+
+a {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: green;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">شاصيها | تحديد أقرب مركز فحص</div>
+
+<div class="container">
+  <button onclick="findNearest()">📍 تحديد موقعي</button>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const branches = [
+  {name: "فرع زيونة", lat: 33.3152, lng: 44.3661},
+  {name: "فرع المنصور", lat: 33.3064, lng: 44.3386},
+  {name: "فرع الكرادة", lat: 33.3081, lng: 44.4082}
+];
+
+function distance(lat1, lon1, lat2, lon2) {
+  return Math.sqrt((lat1-lat2)**2 + (lon1-lon2)**2);
+}
+
+function findNearest() {
+  if (!navigator.geolocation) {
+    alert("المتصفح لا يدعم تحديد الموقع");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(position => {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    let nearest = null;
+    let minDist = Infinity;
+
+    branches.forEach(branch => {
+      let d = distance(userLat, userLng, branch.lat, branch.lng);
+      if (d < minDist) {
+        minDist = d;
+        nearest = branch;
+      }
+    });
+
+    document.getElementById("result").innerHTML =
+      `📍 أقرب فرع إليك: <b>${nearest.name}</b><br>
+       <a target="_blank"
+       href="https://www.google.com/maps/dir/?api=1&destination=${nearest.lat},${nearest.lng}">
+       🚗 ابدأ الطريق الآن
+       </a>`;
+  }, () => {
+    alert("لازم تسمح للموقع (Location)");
+  });
+}
+</script>
+
+</body>
+</html>
