@@ -1,26 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شاصيها | أقرب مركز</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f5f7fa;
+  margin: 0;
+}
+
+.header {
+  background: #000;
+  color: #fff;
+  padding: 20px;
+  font-size: 22px;
+}
+
+button {
+  padding: 15px 25px;
+  font-size: 18px;
+  margin-top: 40px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+}
+
+.result {
+  margin-top: 30px;
+  font-size: 20px;
+}
+
+a {
+  display: block;
+  margin: 10px auto;
+  padding: 12px;
+  width: 200px;
+  background: green;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">شاصيها | تحديد أقرب مركز</div>
+
+<button onclick="findNearest()">📍 تحديد موقعي</button>
+
+<div class="result" id="result"></div>
+
 <script>
+const branches = [
+  {
+    name: "فرع زيونة",
+    lat: 33.3152,
+    lng: 44.3661,
+    link: "https://linktr.ee/SHASSIHA"
+  },
+  {
+    name: "فرع المنصور",
+    lat: 33.3064,
+    lng: 44.3386,
+    link: "https://linktr.ee/SHASSIHA"
+  }
+];
+
+function distance(a,b,c,d){
+  return Math.sqrt((a-c)**2 + (b-d)**2);
+}
+
 function showResult(branch){
   document.getElementById("result").innerHTML = `
     <h3>${branch.name}</h3>
 
+    <a target="_blank" href="${branch.link}">
+    📍 معلومات الفرع
+    </a>
+
     <a target="_blank"
     href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
-    🚗 افتح Google Maps
+    🚗 Google Maps
     </a>
 
     <a onclick="openWaze(${branch.lat},${branch.lng})">
-    🧭 افتح Waze
+    🧭 Waze
     </a>
   `;
 }
 
 function openWaze(lat, lng) {
-  // محاولة فتح Waze مباشرة
   window.location = `waze://?ll=${lat},${lng}&navigate=yes`;
 
-  // إذا ما فتح، يحول لـ Google Maps
   setTimeout(() => {
     window.location = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
   }, 1500);
 }
+
+function findNearest(){
+
+  if (!navigator.geolocation){
+    alert("جهازك لا يدعم تحديد الموقع");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    let lat = pos.coords.latitude;
+    let lng = pos.coords.longitude;
+
+    let nearest = branches[0];
+    let min = Infinity;
+
+    branches.forEach(b=>{
+      let d = distance(lat,lng,b.lat,b.lng);
+      if(d<min){min=d; nearest=b;}
+    });
+
+    showResult(nearest);
+
+  },()=>{
+    alert("فعل الموقع (Location) من المتصفح");
+  });
+
+}
 </script>
+
+</body>
+</html>
