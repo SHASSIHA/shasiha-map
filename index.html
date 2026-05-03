@@ -6,27 +6,72 @@
 <title>شاصيها</title>
 
 <style>
-body {font-family: Arial; text-align:center;}
-button {padding:15px; margin-top:20px;}
-a {display:block; margin:10px; padding:10px; background:green; color:white; text-decoration:none;}
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+.header {
+  padding: 20px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.card {
+  background: #1e293b;
+  margin: 20px;
+  padding: 25px;
+  border-radius: 20px;
+}
+
+button {
+  width: 90%;
+  padding: 15px;
+  font-size: 18px;
+  background: #22c55e;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  margin-top: 20px;
+}
+
+.btn {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.maps { background: #3b82f6; }
+.waze { background: #06b6d4; }
+
 </style>
 </head>
 
 <body>
 
-<h2>مع شاصيها خل نحددلك منو اقرب مركز فحص عليك</h2>
+<div class="header">🚗 شاصيها</div>
 
-<button onclick="findNearest()">تحديد موقعي</button>
+<div class="card">
+  <h3>حدد موقعك حتى نوجهك لأقرب مركز</h3>
+  <button onclick="findNearest()">📍 تحديد موقعي</button>
+</div>
 
 <div id="result"></div>
 
 <script>
 const branches = [
-  {name:"دايتونا جيك الدورة شارع 60", lat:33.2330455, lng:44.3967521},
+  {name:"الدورة", lat:33.2330455, lng:44.3967521},
   {name:"المستنصرية", lat:33.3594789, lng:44.3953294},
-  {name:"مزاد باشا ساحة الواثق", lat:33.3140634, lng:44.4338601},
-  {name:"مزاد باشا علي الصالح", lat:33.348272602869, lng:44.342183022312426},
-  {name:"3C المندلاوي نفق الشرطة", lat:33.3065103, lng:44.3233576}
+  {name:"الواثق", lat:33.3140634, lng:44.4338601},
+  {name:"النهضة", lat:33.3065103, lng:44.3233576}
 ];
 
 function distance(a,b,c,d){
@@ -35,15 +80,18 @@ function distance(a,b,c,d){
 
 function showResult(branch){
   document.getElementById("result").innerHTML = `
-    <h3>${branch.name}</h3>
+    <div class="card">
+      <h2>${branch.name}</h2>
 
-    <a href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}" target="_blank">
-    🚗 Google Maps
-    </a>
+      <a class="btn maps" target="_blank"
+      href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
+      🚗 فتح Google Maps
+      </a>
 
-    <a onclick="openWaze(${branch.lat},${branch.lng})">
-    🧭 Waze
-    </a>
+      <a class="btn waze" onclick="openWaze(${branch.lat},${branch.lng})">
+      🧭 فتح Waze
+      </a>
+    </div>
   `;
 }
 
@@ -56,12 +104,6 @@ function openWaze(lat, lng){
 }
 
 function findNearest(){
-
-  if (!navigator.geolocation){
-    alert("جهازك لا يدعم الموقع");
-    return;
-  }
-
   navigator.geolocation.getCurrentPosition(function(pos){
 
     let lat = pos.coords.latitude;
@@ -80,9 +122,8 @@ function findNearest(){
 
     showResult(nearest);
 
-  }, function(err){
+  }, function(){
     alert("فعل الموقع من المتصفح");
-    console.log(err);
   });
 }
 </script>
