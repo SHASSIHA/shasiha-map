@@ -3,149 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>شاصيها | أقرب مركز</title>
-
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #f5f7fa;
-  margin: 0;
-}
-
-.header {
-  background: #000;
-  color: #fff;
-  padding: 20px;
-  font-size: 22px;
-}
-
-button {
-  padding: 15px 25px;
-  font-size: 18px;
-  margin-top: 40px;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background: #007bff;
-  color: white;
-}
-
-.result {
-  margin-top: 30px;
-  font-size: 20px;
-}
-
-a {
-  display: block;
-  margin: 10px auto;
-  padding: 12px;
-  width: 200px;
-  background: green;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-}
-</style>
+<title>شاصيها</title>
 </head>
 
-<body>
+<body style="text-align:center; font-family:Arial;">
 
-<div class="header">شاصيها | تحديد أقرب مركز</div>
+<h2>📍 تحديد أقرب مركز</h2>
 
-<button onclick="findNearest()">📍 تحديد موقعي</button>
+<button onclick="findNearest()" style="padding:15px;">تحديد موقعي</button>
 
-<div class="result" id="result"></div>
+<div id="result"></div>
 
 <script>
 const branches = [
-  {const branches = [
-  {
-    name: "دايتونا جيك - الدورة شارع 60",
-    lat: 33.23304554221152,
-    lng: 44.39675212276324,
-    link: "https://linktr.ee/SHASSIHA"
-  },
-  {
-    name: "مركز المستنصرية",
-    lat: 33.359478919388195,
-    lng: 44.39532940093528,
-    link: "https://linktr.ee/SHASSIHA"
-  },
-  {
-    name: "مزاد باشا - ساحة الواثق",
-    lat: 33.31406347746652,
-    lng: 44.43386015502606,
-    link: "https://linktr.ee/SHASSIHA"
-  },
-  {
-    name: "المندلاوي - النهضة",
-    lat: 33.30651036356229,
-    lng: 44.32335767474044,
-    link: "https://linktr.ee/SHASSIHA"
-  }
+  {name:"الدورة", lat:33.2330455, lng:44.3967521},
+  {name:"المستنصرية", lat:33.3594789, lng:44.3953294}
 ];
-  }
-];
-
-function distance(a,b,c,d){
-  return Math.sqrt((a-c)**2 + (b-d)**2);
-}
-
-function showResult(branch){
-  document.getElementById("result").innerHTML = `
-    <h3>${branch.name}</h3>
-
-    <a target="_blank" href="${branch.link}">
-    📍 معلومات الفرع
-    </a>
-
-    <a target="_blank"
-    href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
-    🚗 Google Maps
-    </a>
-
-    <a onclick="openWaze(${branch.lat},${branch.lng})">
-    🧭 Waze
-    </a>
-  `;
-}
-
-function openWaze(lat, lng) {
-  window.location = `waze://?ll=${lat},${lng}&navigate=yes`;
-
-  setTimeout(() => {
-    window.location = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-  }, 1500);
-}
 
 function findNearest(){
+  alert("اشتغل الزر"); // اختبار
 
   if (!navigator.geolocation){
-    alert("جهازك لا يدعم تحديد الموقع");
+    alert("الموقع غير مدعوم");
     return;
   }
 
-  navigator.geolocation.getCurrentPosition(pos=>{
+  navigator.geolocation.getCurrentPosition(function(pos){
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
     let nearest = branches[0];
-    let min = Infinity;
+    document.getElementById("result").innerHTML = nearest.name;
 
-    branches.forEach(b=>{
-      let d = distance(lat,lng,b.lat,b.lng);
-      if(d<min){min=d; nearest=b;}
-    });
-
-    showResult(nearest);
-
-  },()=>{
-    alert("فعل الموقع (Location) من المتصفح");
+  }, function(){
+    alert("فعل الموقع");
   });
-
-} 
-</script> 
+}
+</script>
 
 </body>
 </html>
