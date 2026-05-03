@@ -4,39 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>شاصيها</title>
+
+<style>
+body {font-family: Arial; text-align:center;}
+button {padding:15px; margin-top:20px;}
+a {display:block; margin:10px; padding:10px; background:green; color:white; text-decoration:none;}
+</style>
 </head>
 
-<body style="text-align:center; font-family:Arial;">
+<body>
 
 <h2>📍 تحديد أقرب مركز</h2>
 
-<button onclick="findNearest()" style="padding:15px;">تحديد موقعي</button>
+<button onclick="findNearest()">تحديد موقعي</button>
 
 <div id="result"></div>
 
 <script>
 const branches = [
   {name:"الدورة", lat:33.2330455, lng:44.3967521},
-  {name:"المستنصرية", lat:33.3594789, lng:44.3953294}
+  {name:"المستنصرية", lat:33.3594789, lng:44.3953294},
+  {name:"الواثق", lat:33.3140634, lng:44.4338601},
+  {name:"النهضة", lat:33.3065103, lng:44.3233576}
 ];
 
+function distance(a,b,c,d){
+  return Math.sqrt((a-c)**2 + (b-d)**2);
+}
+
+function showResult(branch){
+  document.getElementById("result").innerHTML = `
+    <h3>${branch.name}</h3>
+
+    <a href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}" target="_blank">
+    🚗 Google Maps
+    </a>
+
+    <a onclick="openWaze(${branch.lat},${branch.lng})">
+    🧭 Waze
+    </a>
+  `;
+}
+
+function openWaze(lat, lng){
+  window.location = `waze://?ll=${lat},${lng}&navigate=yes`;
+
+  setTimeout(()=>{
+    window.location = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  },1500);
+}
+
 function findNearest(){
-  alert("اشتغل الزر"); // اختبار
 
   if (!navigator.geolocation){
-    alert("الموقع غير مدعوم");
+    alert("جهازك لا يدعم الموقع");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(function(pos){
+
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
-    let nearest = branches[0];
-    document.getElementById("result").innerHTML = nearest.name;
+    let nearest = null;
+    let min = Infinity;
 
-  }, function(){
-    alert("فعل الموقع");
+    branches.forEach(function(b){
+      let d = distance(lat,lng,b.lat,b.lng);
+      if(d < min){
+        min = d;
+        nearest = b;
+      }
+    });
+
+    showResult(nearest);
+
+  }, function(err){
+    alert("فعل الموقع من المتصفح");
+    console.log(err);
   });
 }
 </script>
