@@ -54,7 +54,15 @@ button {
 
 /* ألوان */
 .maps { background: #374151; }
-.waze { background: #33ccff; }
+.waze {
+  background: #33ccff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
 </style>
 </head>
 
@@ -99,8 +107,9 @@ function showResult(branch){
       </a>
 
       <a class="btn waze" onclick="openWaze(${branch.lat},${branch.lng})">
-      🧭 Waze
-      </a>
+       <img src="https://cdn-icons-png.flaticon.com/512/3771/3771536.png" width="20">
+فتح Waze
+</a>
     </div>
   `;
 }
