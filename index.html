@@ -9,35 +9,38 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #0f172a;
+  background: #111827;
   color: white;
   text-align: center;
 }
 
-.header {
-  padding: 20px;
-  font-size: 22px;
-  font-weight: bold;
+/* اللوجو */
+.logo {
+  width: 140px;
+  margin-top: 20px;
 }
 
+/* كارد */
 .card {
-  background: #1e293b;
+  background: #1f2937;
   margin: 20px;
   padding: 25px;
   border-radius: 20px;
 }
 
+/* زر رئيسي */
 button {
   width: 90%;
   padding: 15px;
   font-size: 18px;
-  background: #22c55e;
+  background: #ff6a00; /* برتقالي اللوجو */
   border: none;
   border-radius: 12px;
   color: white;
   margin-top: 20px;
 }
 
+/* أزرار */
 .btn {
   display: block;
   width: 90%;
@@ -49,15 +52,17 @@ button {
   font-size: 16px;
 }
 
-.maps { background: #3b82f6; }
-.waze { background: #06b6d4; }
+/* ألوان */
+.maps { background: #374151; }
+.waze { background: #ff6a00; }
 
 </style>
 </head>
 
 <body>
 
-<div class="header">🚗 شاصيها</div>
+<!-- اللوجو -->
+<img src="logo.png" class="logo">
 
 <div class="card">
   <h3>حدد موقعك حتى نوجهك لأقرب مركز</h3>
@@ -68,7 +73,7 @@ button {
 
 <script>
 const branches = [
-  {name:"دايتونا جيك2 الدورة شارع 60", lat:33.2330455, lng:44.3967521},
+ {name:"دايتونا جيك2 الدورة شارع 60", lat:33.2330455, lng:44.3967521},
   {name:"المستنصرية", lat:33.3594789, lng:44.3953294},
    {name:"فحص باشا ساحة الواثق", lat:33.3140634, lng:44.4338601},
   {name:"فحص باشا علي الصالح", lat:33.34827561360025, lng:44.34224104588671},
@@ -91,11 +96,11 @@ function showResult(branch){
 
       <a class="btn maps" target="_blank"
       href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
-      🚗 فتح Google Maps
+      🚗 Google Maps
       </a>
 
       <a class="btn waze" onclick="openWaze(${branch.lat},${branch.lng})">
-      🧭 فتح Waze
+      🧭 Waze
       </a>
     </div>
   `;
@@ -129,7 +134,7 @@ function findNearest(){
     showResult(nearest);
 
   }, function(){
-    alert("فعل الموقع من المتصفح");
+    alert("فعل الموقع");
   });
 }
 </script>
