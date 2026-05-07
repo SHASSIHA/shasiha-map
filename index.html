@@ -164,20 +164,63 @@ function openWaze(lat, lng){
 }
 
 function findNearest(){
+
   navigator.geolocation.getCurrentPosition(function(pos){
 
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
-    let nearest = null;
-    let min = Infinity;
+    // نحسب المسافة لكل فرع
+    let sorted = branches.map(branch => {
 
-    branches.forEach(function(b){
-      let d = distance(lat,lng,b.lat,b.lng);
-      if(d < min){
-        min = d;
-        nearest = b;
-      }
+      let d = distance(lat,lng,branch.lat,branch.lng);
+
+      return {
+        ...branch,
+        dist: d
+      };
+
+    });
+
+    // ترتيب حسب الأقرب
+    sorted.sort((a,b)=>a.dist-b.dist);
+
+    // نجيب أول 3
+    let nearestThree = sorted.slice(0,3);
+
+    let html = "";
+
+    nearestThree.forEach(branch=>{
+
+      html += `
+      <div class="card">
+
+        <h2>${branch.name}</h2>
+
+        <a class="btn maps" target="_blank"
+        href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
+        🚗 Google Maps
+        </a>
+
+        <a class="btn waze"
+        onclick="openWaze(${branch.lat},${branch.lng})">
+        🧭 فتح Waze
+        </a>
+
+      </div>
+      `;
+
+    });
+
+    document.getElementById("result").innerHTML = html;
+
+  }, function(){
+
+    alert("فعل الموقع");
+
+  });
+
+}  }
     });
 
     showResult(nearest);
