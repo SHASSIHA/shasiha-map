@@ -170,15 +170,58 @@ function findNearest(){
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
-    // نحسب المسافة لكل فرع
-    let sorted = branches.map(branch => {
+    let sorted = branches.map(function(branch){
 
       let d = distance(lat,lng,branch.lat,branch.lng);
 
       return {
-        ...branch,
+        name: branch.name,
+        lat: branch.lat,
+        lng: branch.lng,
         dist: d
       };
+
+    });
+
+    sorted.sort(function(a,b){
+      return a.dist - b.dist;
+    });
+
+    let nearestThree = sorted.slice(0,3);
+
+    let html = "";
+
+    nearestThree.forEach(function(branch){
+
+      html += `
+      <div class="card">
+
+        <h2>${branch.name}</h2>
+
+        <a class="btn maps" target="_blank"
+        href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
+        🚗 Google Maps
+        </a>
+
+        <a class="btn waze"
+        onclick="openWaze(${branch.lat},${branch.lng})">
+        🧭 فتح Waze
+        </a>
+
+      </div>
+      `;
+
+    });
+
+    document.getElementById("result").innerHTML = html;
+
+  }, function(){
+
+    alert("فعل الموقع");
+
+  });
+
+};
 
     });
 
