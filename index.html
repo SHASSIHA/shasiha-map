@@ -180,12 +180,12 @@ function findNearest(){
 
     let sorted = branches.map(function(branch){
 
-      return {
-        ...branch,
-        dist: distance(lat,lng,branch.lat,branch.lng)
-      };
+  return {
+    ...branch,
+    dist: (distance(lat,lng,branch.lat,branch.lng) * 111).toFixed(1)
+   };
 
-    });
+   });
 
     sorted.sort(function(a,b){
       return a.dist - b.dist;
@@ -202,6 +202,7 @@ function findNearest(){
       <div class="card">
 
         <h2>${branch.name}</h2>
+        <p>📍 يبعد عنك ${branch.dist} كم</p>
 
         <a class="btn maps" target="_blank"
         href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
