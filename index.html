@@ -225,17 +225,22 @@ function findNearest(){
 
     let html = "";
 
-    nearestThree.forEach(function(branch){
+    nearestThree.forEach(function(branch,index){
 
-      html += `
+  let distanceText =
+    index === 0
+    ? `📍 الأقرب إليك ${branch.dist} كم`
+    : `📍 يبعد عنك ${branch.dist} كم`;
 
-      <div class="card">
+  html += `
 
-        <h2>${branch.name}</h2>
+  <div class="card">
 
-        <p class="distance">
-          📍 الأقرب إليك ${branch.dist} كم
-        </p>
+    <h2>${branch.name}</h2>
+
+    <p class="distance">
+      ${distanceText}
+    </p>
 
         <a class="btn maps"
         target="_blank"
