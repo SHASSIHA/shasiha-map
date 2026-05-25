@@ -68,8 +68,15 @@ button{
 
 .distance{
   font-size:18px;
-  color:#ffb067;
   font-weight:bold;
+}
+
+.nearest{
+  color:#ffb067;
+}
+
+.normal-distance{
+  color:#d1d5db;
 }
 
 </style>
@@ -195,7 +202,6 @@ function findNearest(){
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
-    // اخفاء كارد تحديد الموقع
     document.getElementById("locationCard").style.display = "none";
 
     let sorted = branches.map(function(branch){
@@ -227,20 +233,25 @@ function findNearest(){
 
     nearestThree.forEach(function(branch,index){
 
-  let distanceText =
-    index === 0
-    ? `📍 الأقرب إليك ${branch.dist} كم`
-    : `📍 يبعد عنك ${branch.dist} كم`;
+      let distanceText =
+        index === 0
+        ? `📍 الأقرب إليك ${branch.dist} كم`
+        : `📍 يبعد عنك ${branch.dist} كم`;
 
-  html += `
+      let distanceClass =
+        index === 0
+        ? "nearest"
+        : "normal-distance";
 
-  <div class="card">
+      html += `
 
-    <h2>${branch.name}</h2>
+      <div class="card">
 
-    <p class="distance">
-      ${distanceText}
-    </p>
+        <h2>${branch.name}</h2>
+
+        <p class="distance ${distanceClass}">
+          ${distanceText}
+        </p>
 
         <a class="btn maps"
         target="_blank"
