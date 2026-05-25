@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,85 +7,87 @@
 
 <style>
 
-body {
-  margin: 0;
-  font-family: Arial;
-   background: white;
-  color: #e9edf2;
-  text-align: center;
+body{
+  margin:0;
+  font-family:Arial;
+  background:white;
+  text-align:center;
 }
 
-/* اللوجو */
-.logo {
-  width: 140px;
-  margin-top: 20px;
+.logo{
+  width:140px;
+  margin-top:20px;
 }
 
-/* كارد */
-.card {
-  background: #1f2937;
-  color: white;
-  margin: 20px;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+.card{
+  background:#1f2937;
+  color:white;
+  margin:20px;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.25);
 }
 
 .card h2,
-.card h3 {
-  color: white;
+.card h3{
+  margin-top:0;
 }
 
-/* زر رئيسي */
-button {
-  width: 90%;
-  padding: 15px;
-  font-size: 18px;
-  background: #ff6a00;
-  border: none;
-  border-radius: 12px;
-  color: white;
-  margin-top: 20px;
-  cursor: pointer;
+button{
+  width:90%;
+  padding:15px;
+  font-size:18px;
+  background:#ff6a00;
+  border:none;
+  border-radius:12px;
+  color:white;
+  margin-top:20px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-/* أزرار */
-.btn {
-  display: block;
-  width: 90%;
-  margin: 10px auto;
-  padding: 14px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+.btn{
+  display:block;
+  width:90%;
+  margin:10px auto;
+  padding:14px;
+  border-radius:12px;
+  text-decoration:none;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
 }
 
-/* Google Maps */
-.maps {
-  background: #374151;
+.maps{
+  background:#374151;
 }
 
-/* Waze */
-.waze {
-  background: #33ccff;
+.waze{
+  background:#33ccff;
+}
+
+.distance{
+  font-size:18px;
+  color:#ffb067;
+  font-weight:bold;
 }
 
 </style>
 </head>
-  
+
 <body>
 
-<!-- اللوجو -->
 <img src="./logo.png" class="logo">
 
-<div class="card">
-  <h3>حدد موقعك حتى نوجهك لأقرب مركز عليك</h3>
+<!-- كارد تحديد الموقع -->
+<div class="card" id="locationCard">
+
+  <h3>حدد موقعك حتى نوجهك إلى الأقرب إليك</h3>
 
   <button onclick="findNearest()">
     📍 تحديد موقعي
   </button>
+
 </div>
 
 <div id="result"></div>
@@ -137,20 +139,35 @@ const branches = [
 {name:"سونار الرزان", lat:32.762428786647284, lng:44.285720515340614},
 {name:"سونار جعفر التميمي", lat:32.774138781481675, lng:44.285720515340614},
 {name:"سونار سكات باك", lat:33.24612169093314, lng:44.31028528894025},
-  {name:"2سونار كارجيك", lat:33.378044062384916, lng:44.414254823199514},
- {name:"المندلاوي نفق الشرطة", lat:33.30654622983739, lng:44.32356919981025},
- {name:"المندلاوي والحمداني النجف", lat:32.02143566495304, lng:44.38302011542739},
- {name:"بدي كار النجف", lat:32.003381605983655, lng:44.37635779611913},
- {name:"بدي كار بغداد", lat:33.324988574176544, lng:44.35727435717584},
- {name:"سونار مستر كار", lat:33.27006287250414, lng:44.33938490018357},
- {name:"سونار الكحلاء", lat:33.24076433997141, lng:44.33407518572781},
-  {name:"🏆سونار العميد", lat:32.57599058529141, lng:44.05941729850001},
+{name:"2سونار كارجيك", lat:33.378044062384916, lng:44.414254823199514},
+{name:"المندلاوي نفق الشرطة", lat:33.30654622983739, lng:44.32356919981025},
+{name:"المندلاوي والحمداني النجف", lat:32.02143566495304, lng:44.38302011542739},
+{name:"بدي كار النجف", lat:32.003381605983655, lng:44.37635779611913},
+{name:"بدي كار بغداد", lat:33.324988574176544, lng:44.35727435717584},
+{name:"سونار مستر كار", lat:33.27006287250414, lng:44.33938490018357},
+{name:"سونار الكحلاء", lat:33.24076433997141, lng:44.33407518572781},
+{name:"🏆سونار العميد", lat:32.57599058529141, lng:44.05941729850001},
 {name:"علي المندلاوي نفق الشرطة", lat:33.3065103, lng:44.3233576}
 
 ];
 
-function distance(a,b,c,d){
-  return Math.sqrt((a-c)**2 + (b-d)**2);
+function calculateDistance(lat1, lon1, lat2, lon2){
+
+  const R = 6371;
+
+  const dLat = (lat2-lat1) * Math.PI / 180;
+  const dLon = (lon2-lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) *
+    Math.sin(dLon/2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
 }
 
 function openWaze(lat,lng){
@@ -167,7 +184,7 @@ function openWaze(lat,lng){
 
 function findNearest(){
 
-  if (!navigator.geolocation){
+  if(!navigator.geolocation){
 
     alert("جهازك لا يدعم الموقع");
     return;
@@ -178,17 +195,30 @@ function findNearest(){
     let lat = pos.coords.latitude;
     let lng = pos.coords.longitude;
 
+    // اخفاء كارد تحديد الموقع
+    document.getElementById("locationCard").style.display = "none";
+
     let sorted = branches.map(function(branch){
 
-  return {
-    ...branch,
-    dist: (distance(lat,lng,branch.lat,branch.lng) * 111).toFixed(1)
-   };
+      return {
 
-   });
+        ...branch,
+
+        dist: calculateDistance(
+          lat,
+          lng,
+          branch.lat,
+          branch.lng
+        ).toFixed(1)
+
+      };
+
+    });
 
     sorted.sort(function(a,b){
+
       return a.dist - b.dist;
+
     });
 
     let nearestThree = sorted.slice(0,3);
@@ -202,16 +232,24 @@ function findNearest(){
       <div class="card">
 
         <h2>${branch.name}</h2>
-        <p>📍 يبعد عنك ${branch.dist} كم</p>
 
-        <a class="btn maps" target="_blank"
+        <p class="distance">
+          📍 الأقرب إليك ${branch.dist} كم
+        </p>
+
+        <a class="btn maps"
+        target="_blank"
         href="https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}">
+
         🚗 Google Maps
+
         </a>
 
         <a class="btn waze"
         onclick="openWaze(${branch.lat},${branch.lng})">
+
         🧭 فتح Waze
+
         </a>
 
       </div>
@@ -222,7 +260,9 @@ function findNearest(){
 
     document.getElementById("result").innerHTML = html;
 
-  }, function(){
+  },
+
+  function(){
 
     alert("فعل الموقع من المتصفح");
 
@@ -231,6 +271,7 @@ function findNearest(){
 }
 
 </script>
+
 <footer style="
 margin-top:40px;
 padding:20px;
@@ -242,6 +283,6 @@ text-align:center;
 Powered by <b>SHASSIHA</b> © 2026
 
 </footer>
-  
+
 </body>
 </html>
